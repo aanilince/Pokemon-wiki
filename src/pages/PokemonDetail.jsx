@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getPokemonDetail } from "../services/api";
+import noImage from "/images/no-image.png";
 
 const PokemonDetail = () => {
   const { id } = useParams();
@@ -66,8 +67,9 @@ const PokemonDetail = () => {
             <div className="absolute top-2 left-2 right-2 bottom-2 bg-vintage-50 opacity-40 -z-10"></div>
             <img
               src={
-                pokemon.sprites.other["official-artwork"].front_default ||
-                pokemon.sprites.front_default
+                pokemon?.sprites?.other?.["official-artwork"]?.front_default ??
+                pokemon?.sprites?.front_default ??
+                noImage
               }
               alt={pokemon.name}
               className="w-full h-auto object-contain filter drop-shadow-xl sepia-[0.2]"

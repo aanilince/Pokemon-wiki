@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getPokemonList } from "../services/api";
+import { useSearchParams, Link } from "react-router-dom";
+import { getPokemonList, getPokemonByType } from "../services/api";
 import PokemonCard from "../components/PokemonCard";
 
 const PokemonList = () => {
@@ -10,15 +11,34 @@ const PokemonList = () => {
   const limit = 20;
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [searchParams] = useSearchParams();
+  const typeFilter = searchParams.get("type");
+
+  // Reset state when type filter changes
+  useEffect(() => {
+    setPokemon([]);
+    setOffset(0);
+  }, [typeFilter]);
+
   useEffect(() => {
     const fetchPokemon = async () => {
       try {
         setLoading(true);
-        const data = await getPokemonList(limit, offset);
-        setPokemon((prev) =>
-          offset === 0 ? data.results : [...prev, ...data.results]
-        );
+        if (typeFilter) {
+          // Fetch by type
+          const data = await getPokemonByType(typeFilter);
+          // extract pokemon object from type response structure
+          const formatted = data.pokemon.map((p) => p.pokemon);
+          setPokemon(formatted);
+        } else {
+          // Fetch default list
+          const data = await getPokemonList(limit, offset);
+          setPokemon((prev) =>
+            offset === 0 ? data.results : [...prev, ...data.results]
+          );
+        }
       } catch (err) {
+        console.error(err);
         setError("Failed to load Pokémon.");
       } finally {
         setLoading(false);
@@ -26,7 +46,7 @@ const PokemonList = () => {
     };
 
     fetchPokemon();
-  }, [offset]);
+  }, [offset, typeFilter]);
 
   const loadMore = () => {
     setOffset((prev) => prev + limit);
@@ -40,8 +60,22 @@ const PokemonList = () => {
     <div className="space-y-8 animate-fadeIn">
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b-2 border-vintage-200 pb-6">
         <h1 className="text-3xl font-bold font-display text-vintage-900">
-          Pokédex
+          {typeFilter
+            ? `${
+                typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)
+              } Pokémon`
+            : "Pokédex"}
         </h1>
+
+        {typeFilter && (
+          <Link
+            to="/pokemon"
+            className="text-sm text-vintage-600 hover:text-vintage-accent underline decoration-dotted"
+          >
+            Clear Filter
+          </Link>
+        )}
+
         <div className="relative w-full md:w-96">
           <input
             type="text"
@@ -90,7 +124,7 @@ const PokemonList = () => {
         </div>
       )}
 
-      {!loading && !searchTerm && (
+      {!loading && !searchTerm && !typeFilter && (
         <div className="text-center pt-8">
           <button
             onClick={loadMore}
