@@ -6,21 +6,54 @@ const PokemonCard = ({ name, url }) => {
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
   return (
-    <Link to={`/pokemon/${id}`} className="block group">
-      <div className="bg-white rounded-lg p-6 flex flex-col items-center shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-        <div className="w-32 h-32 mb-4 relative">
-          <img 
-            src={imageUrl} 
-            alt={name} 
-            className="w-full h-full object-contain grayscale-0 group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-          />
+    <Link to={`/pokemon/${id}`} className="block group relative transform hover:-translate-y-2 hover:rotate-1 transition-all duration-300">
+      {/* Card Outer Border (Neutral/Silver) */}
+      <div className="bg-gray-200 p-2 rounded-xl shadow-xl relative z-10 transition-colors group-hover:bg-vintage-200">
+        
+        {/* Card Inner Content */}
+        <div className="bg-gradient-to-br from-vintage-50 to-vintage-100 p-2 rounded-lg border border-gray-400/30 h-full flex flex-col">
+            
+            {/* Header: Name & HP */}
+            <div className="flex justify-between items-center mb-1 px-1">
+                <h3 className="text-sm font-bold font-display capitalize text-tcg-dark tracking-tight">
+                    {name}
+                </h3>
+                <span className="text-xs font-bold text-red-700 font-mono">
+                    <span className="text-[0.6rem] text-tcg-dark">HP</span>
+                    40
+                </span>
+            </div>
+
+            {/* Image Window */}
+            <div className="bg-white border-4 border-vintage-300 shadow-inner mb-2 relative aspect-square overflow-hidden mx-1">
+                 {/* Background flair behind pokemon */}
+                 <div className="absolute inset-0 bg-gradient-to-b from-blue-100/50 to-purple-100/50 opacity-50"></div>
+                 <img 
+                    src={imageUrl} 
+                    alt={name} 
+                    className="w-full h-full object-contain p-2 relative z-10 filter contrast-125 sepia-[0.1]"
+                    loading="lazy"
+                />
+                <span className="absolute bottom-1 right-1 text-[0.6rem] font-bold text-gray-400 bg-white/80 px-1 rounded-sm">
+                    No. {id}
+                </span>
+            </div>
+
+             {/* Flavor Text / Info Area */}
+            <div className="bg-tcg-paper/50 flex-grow border border-vintage-300 p-2 rounded-sm text-[0.65rem] leading-tight text-tcg-dark font-sans text-justify shadow-sm">
+                <p className="italic opacity-80 mb-1">
+                    Pokémon discovered in the Kanto region. A classic specimen with unique attributes.
+                </p>
+                <div className="border-t border-vintage-400/30 pt-1 mt-1 flex justify-center gap-2">
+                     <span className="font-bold text-[0.55rem] uppercase text-gray-500">Lv. 12</span>
+                </div>
+            </div>
+
         </div>
-        <span className="text-gray-400 text-xs font-mono mb-1">#{id.padStart(3, '0')}</span>
-        <h3 className="text-lg font-bold capitalize text-gray-900 group-hover:text-blue-600 transition-colors">
-          {name}
-        </h3>
       </div>
+      
+      {/* Stack effect behind card */}
+      <div className="absolute inset-0 bg-tcg-blue rounded-xl transform translate-x-1 translate-y-1 -z-10 opacity-20 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform"></div>
     </Link>
   );
 };
