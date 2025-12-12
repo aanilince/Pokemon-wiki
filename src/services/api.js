@@ -31,4 +31,9 @@ export const getPokemonByType = async (type) => {
   return response.data;
 };
 
+export const getPokemonSpecies = async (nameOrId) => {
+    const response = await api.get(`/pokemon-species/${nameOrId}`);
+    return response.data;
+};
+
 export default api;
