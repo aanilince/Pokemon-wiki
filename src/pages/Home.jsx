@@ -3,52 +3,89 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="flex flex-col items-center justify-center py-10 text-center">
-      <div className="bg-white/80 backdrop-blur-sm p-12 rounded-2xl shadow-xl border-4 border-double border-vintage-400 max-w-4xl w-full">
-        <h1 className="text-6xl md:text-8xl font-bold font-display text-vintage-900 mb-6 tracking-tight drop-shadow-sm">
-          PokéWiki
-        </h1>
-        <p className="text-xl md:text-2xl text-vintage-700 font-body italic max-w-2xl mx-auto mb-12 border-b border-vintage-400 pb-8">
-          An encyclopedia of pocket monsters, items, and elemental types.
-        </p>
+    <div className="flex flex-col items-center p-6 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-vintage-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-tcg-yellow rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+      <div className="absolute -bottom-32 left-20 w-80 h-80 bg-vintage-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
 
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch w-full">
-          <Link to="/items" className="flex-1 group">
-            <div className="h-full p-8 bg-vintage-100 rounded-lg border border-vintage-300 shadow-md hover:shadow-2xl transition-all duration-500 hover:bg-white transform hover:-translate-y-1">
-              <h2 className="text-2xl font-bold font-display text-vintage-900 mb-2 group-hover:text-vintage-accent">
-                Items
-              </h2>
-              <p className="text-vintage-600 font-sans text-sm">
-                Key objects and tools.
-              </p>
+      <div className="max-w-5xl w-full z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        {/* Left Side: Brand / Intro */}
+        <div className="space-y-8 text-center lg:text-left">
+          <div className="inline-block relative">
+            <h1 className="text-8xl md:text-9xl font-display font-black text-vintage-900 tracking-tighter leading-none opacity-90 select-none">
+              POKÉ
+              <br />
+              WIKI
+            </h1>
+            <div className="absolute -top-6 -right-6 text-6xl text-tcg-red transform rotate-12 opacity-80 mix-blend-multiply pointer-events-none">
+              ★
             </div>
-          </Link>
+            <div className="h-2 w-full bg-vintage-900 mt-2"></div>
+          </div>
 
-          <Link to="/pokemon" className="flex-1 group">
-            <div className="h-full p-8 bg-vintage-100 rounded-lg border border-vintage-300 shadow-md hover:shadow-2xl transition-all duration-500 hover:bg-white transform hover:-translate-y-1">
-              <h2 className="text-3xl font-display font-bold mb-3 text-tcg-yellow tracking-wider">
-                Pokédex
-              </h2>
-              <p className="text-vintage-600 font-sans text-sm">
-                Browse the complete card collection.
-              </p>
-            </div>
-          </Link>
+          <p className="text-xl md:text-2xl font-serif italic text-vintage-700 leading-relaxed max-w-md mx-auto lg:mx-0">
+            "A comprehensive guide for the modern trainer. Cataloging the
+            wonders of the Pokémon world."
+          </p>
 
-          <Link to="/types" className="flex-1 group">
-            <div className="h-full p-8 bg-vintage-100 rounded-lg border border-vintage-300 shadow-md hover:shadow-2xl transition-all duration-500 hover:bg-white transform hover:-translate-y-1">
-              <h2 className="text-2xl font-bold font-display text-vintage-900 mb-2 group-hover:text-vintage-accent">
-                Types
-              </h2>
-              <p className="text-vintage-600 font-sans text-sm">
-                Elemental charts.
-              </p>
-            </div>
-          </Link>
+          <div className="font-mono text-sm text-vintage-500 uppercase tracking-widest pt-4 border-t border-vintage-300 inline-block">
+            Vol. 1 • 2025 Edition
+          </div>
         </div>
+
+        {/* Right Side: Navigation List (Table of Contents Style) */}
+        <nav className="flex flex-col space-y-2 w-full">
+          <MenuLink
+            to="/pokemon"
+            number="01"
+            title="Pokédex Details"
+            subtitle="Complete database of all known species."
+          />
+          <MenuLink
+            to="/items"
+            number="02"
+            title="Item Storage"
+            subtitle="Key objects, tools, and mystical artifacts."
+          />
+          <MenuLink
+            to="/types"
+            number="03"
+            title="Type Charts"
+            subtitle="Elemental strengths and weaknesses analysis."
+          />
+          <MenuLink
+            to="/favorites"
+            number="04"
+            title="My Collection"
+            subtitle="Your personally curated research list."
+          />
+        </nav>
       </div>
     </div>
   );
 };
+
+// Reusable Menu Row Component
+const MenuLink = ({ to, number, title, subtitle }) => (
+  <Link to={to} className="group block">
+    <div className="flex items-baseline gap-6 border-b border-vintage-400/30 pb-4 pt-4 px-4 transition-all duration-300 hover:bg-white/40 hover:pl-8 hover:border-tcg-red">
+      <span className="font-mono font-bold text-vintage-400 text-lg group-hover:text-tcg-red transition-colors">
+        {number}
+      </span>
+      <div className="flex-1">
+        <h2 className="text-3xl font-display font-bold text-vintage-800 group-hover:text-vintage-900 leading-none mb-1">
+          {title}
+        </h2>
+        <p className="font-sans text-sm text-vintage-600 group-hover:text-vintage-800 opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+          {subtitle}
+        </p>
+      </div>
+      <span className="text-2xl text-vintage-300 group-hover:text-tcg-red transform group-hover:translate-x-2 transition-all duration-300">
+        →
+      </span>
+    </div>
+  </Link>
+);
 
 export default Home;
