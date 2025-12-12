@@ -124,7 +124,7 @@ const PokemonCard = ({ name, url }) => {
             <p className="italic opacity-80 mb-1 line-clamp-4">{description}</p>
             <div className="border-t border-vintage-400/30 pt-1 mt-1 flex justify-center gap-2">
               <span className="font-bold text-[0.55rem] uppercase text-gray-500">
-                Lv. 12
+                LV.{Math.floor(Math.random() * 50) + 20}
               </span>
             </div>
           </div>

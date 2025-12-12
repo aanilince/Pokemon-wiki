@@ -45,7 +45,7 @@ const PokemonDetail = () => {
           <div className="flex items-center gap-2">
             <span className="font-bold text-red-700 text-xl font-mono">
               <span className="text-xs text-tcg-dark mr-1">LV</span>
-              {Math.floor(Math.random() * 50) + 20}
+              {((parseInt(id || "1") * 7) % 95) + 5}
             </span>
             {pokemon.types.map((t) => (
               <span
