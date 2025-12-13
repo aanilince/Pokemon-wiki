@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { getPokemonList, getPokemonByType } from "../services/api";
+import {
+  getPokemonList,
+  getPokemonByType,
+  getPokemonDetail,
+} from "../services/api";
 import PokemonCard from "../components/PokemonCard";
 
 const PokemonList = () => {
@@ -10,14 +14,41 @@ const PokemonList = () => {
   const [offset, setOffset] = useState(0);
   const limit = 20;
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDbSearchCallback, setIsDbSearchCallback] = useState(false);
 
   const [searchParams] = useSearchParams();
   const typeFilter = searchParams.get("type");
+
+  const handleDbSearch = async () => {
+    if (!searchTerm.trim()) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+      // API expects lowercase name or ID
+      const data = await getPokemonDetail(searchTerm.toLowerCase().trim());
+
+      // Construct a pokemon object compatible with the list view (name + url with ID)
+      const mockUrl = `https://pokeapi.co/api/v2/pokemon/${data.id}/`;
+      const result = [{ name: data.name, url: mockUrl }];
+
+      setPokemon(result);
+      setIsDbSearchCallback(true);
+    } catch (err) {
+      console.error(err);
+      setError(`Pokemon "${searchTerm}" not found in Database.`);
+      setPokemon([]); // Clear list on error or keep previous? Clearing makes it obvious it failed to find THAT specific one.
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Reset state when type filter changes
   useEffect(() => {
     setPokemon([]);
     setOffset(0);
+    setIsDbSearchCallback(false);
+    setSearchTerm(""); // Optionally clear search term
   }, [typeFilter]);
 
   useEffect(() => {
@@ -76,27 +107,38 @@ const PokemonList = () => {
           </Link>
         )}
 
-        <div className="relative w-full md:w-96">
-          <input
-            type="text"
-            placeholder="Search loaded Pokémon..."
-            className="w-full bg-tcg-paper border-4 border-vintage-400 text-tcg-dark rounded-sm px-6 py-3 pl-12 focus:border-tcg-blue focus:ring-0 outline-none transition-all placeholder-vintage-500 font-bold font-mono shadow-inner"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <svg
-            className="w-5 h-5 text-vintage-500 absolute left-4 top-1/2 transform -translate-y-1/2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+          <div className="relative w-full md:w-96">
+            <input
+              type="text"
+              placeholder="Search loaded Pokémon..."
+              className="w-full bg-tcg-paper border-4 border-vintage-400 text-tcg-dark rounded-sm px-6 py-3 pl-12 focus:border-tcg-blue focus:ring-0 outline-none transition-all placeholder-vintage-500 font-bold font-mono shadow-inner"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleDbSearch();
+              }}
             />
-          </svg>
+            <svg
+              className="w-5 h-5 text-vintage-500 absolute left-4 top-1/2 transform -translate-y-1/2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <button
+            onClick={handleDbSearch}
+            className="px-6 py-3 bg-tcg-blue text-white font-bold font-display rounded-sm border-2 border-tcg-blue hover:bg-blue-700 hover:border-blue-700 transition-all shadow-md whitespace-nowrap"
+          >
+            Search in DB
+          </button>
         </div>
       </div>
 
@@ -124,7 +166,7 @@ const PokemonList = () => {
         </div>
       )}
 
-      {!loading && !searchTerm && !typeFilter && (
+      {!loading && !searchTerm && !typeFilter && !isDbSearchCallback && (
         <div className="text-center pt-8">
           <button
             onClick={loadMore}

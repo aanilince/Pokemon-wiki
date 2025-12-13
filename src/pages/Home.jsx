@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="flex flex-col items-center p-6 relative overflow-hidden">
+    <div className="min-h-[calc(100vh-17rem)] flex flex-col items-center p-6 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-vintage-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
       <div className="absolute top-0 right-0 w-64 h-64 bg-tcg-yellow rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>

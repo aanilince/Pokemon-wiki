@@ -7,7 +7,7 @@ const Favorites = () => {
   const { favorites } = useFavorites();
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="min-h-[calc(100vh-16rem)] space-y-8 animate-fadeIn">
       <h1 className="text-3xl font-bold font-display text-vintage-900 border-b-2 border-vintage-200 pb-4">
         My Favorites Collection
       </h1>
