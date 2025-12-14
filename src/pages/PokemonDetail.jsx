@@ -38,11 +38,11 @@ const PokemonDetail = () => {
     <div className="max-w-4xl mx-auto animate-slideUp font-body">
       {/* Card Header Effect */}
       <div className="bg-tcg-yellow p-4 rounded-t-xl shadow-lg relative z-20 mx-4 mt-4 border-b-2 border-yellow-600/20">
-        <div className="flex justify-between items-center text-tcg-dark">
-          <h1 className="text-4xl font-bold font-display tracking-tight ml-2">
+        <div className="flex flex-col md:flex-row justify-between items-center text-tcg-dark gap-4 md:gap-0">
+          <h1 className="text-4xl font-bold font-display tracking-tight ml-2 text-center md:text-left">
             {pokemon.name}
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="font-bold text-red-700 text-xl font-mono">
               <span className="text-xs text-tcg-dark mr-1">LV</span>
               {Math.floor(Math.random() * 50) + 20}
