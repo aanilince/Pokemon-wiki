@@ -28,13 +28,14 @@ const PokemonCard = ({ name, url }) => {
           setLevel(Math.floor(detailData.base_experience / 2.55));
         }
 
+        // Fetch species data for flavor text (description)
         const speciesData = await getPokemonSpecies(id);
         const flavorText = speciesData.flavor_text_entries.find(
           (entry) => entry.language.name === "en"
         );
 
         if (isMounted) {
-          // Clean up the text (remove newlines/form feeds)
+          // Clean up the text (remove newlines/form feeds) for display
           const cleanText = flavorText
             ? flavorText.flavor_text.replace(/[\n\f]/g, " ")
             : "No description available.";

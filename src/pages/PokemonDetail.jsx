@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getPokemonDetail } from "../services/api";
 import noImage from "/images/no-image.png";
+import Loading from "../components/Loading";
+import ErrorMessage from "../components/ErrorMessage";
 
 const PokemonDetail = () => {
   const { id } = useParams();
@@ -24,14 +26,8 @@ const PokemonDetail = () => {
     fetchData();
   }, [id]);
 
-  if (loading)
-    return (
-      <div className="text-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
-      </div>
-    );
-  if (error)
-    return <div className="text-center text-red-500 py-20">{error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage message={error} />;
   if (!pokemon) return null;
 
   return (

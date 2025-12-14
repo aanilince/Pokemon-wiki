@@ -29,6 +29,15 @@ const Home = () => {
             wonders of the Pokémon world."
           </p>
 
+          <p className="text-md font-body text-vintage-800 leading-relaxed max-w-lg mx-auto lg:mx-0 border-l-4 border-tcg-red pl-4 italic bg-white/40 p-2 rounded-r-md">
+            The world of Pokémon is a vibrant ecosystem where humans co-exist
+            with creatures of extraordinary power. From the depths of the oceans
+            to the highest peaks, these "Pocket Monsters" inhabit every corner
+            of the globe, each possessing unique elemental abilities. It is a
+            world defined by the bond between Trainers and their partners,
+            driven by the spirit of adventure, battle, and discovery.
+          </p>
+
           <div className="font-mono text-sm text-vintage-500 uppercase tracking-widest pt-4 border-t border-vintage-300 inline-block">
             Vol. 1 • 2025 Edition
           </div>

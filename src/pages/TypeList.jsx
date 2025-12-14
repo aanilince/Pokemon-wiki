@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getTypeList } from "../services/api";
+import Loading from "../components/Loading";
+import ErrorMessage from "../components/ErrorMessage";
 
 const TypeList = () => {
   const [types, setTypes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTypes = async () => {
-      const data = await getTypeList();
-      setTypes(data.results);
-      setLoading(false);
+      try {
+        const data = await getTypeList();
+        setTypes(data.results);
+      } catch (err) {
+        console.error("Failed to fetch types:", err);
+        setError("Failed to load types.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchTypes();
   }, []);
@@ -63,11 +72,8 @@ const TypeList = () => {
           </Link>
         ))}
       </div>
-      {loading && (
-        <div className="text-center py-8 text-vintage-400 font-body">
-          Loading Types...
-        </div>
-      )}
+      {error && <ErrorMessage message={error} />}
+      {loading && <Loading />}
     </div>
   );
 };

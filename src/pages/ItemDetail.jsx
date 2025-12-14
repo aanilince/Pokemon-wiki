@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getItemDetail } from "../services/api";
+import Loading from "../components/Loading";
+import ErrorMessage from "../components/ErrorMessage";
 
 const ItemDetail = () => {
   const { name } = useParams();
@@ -23,18 +25,8 @@ const ItemDetail = () => {
     fetchData();
   }, [name]);
 
-  if (loading)
-    return (
-      <div className="text-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vintage-accent mx-auto"></div>
-      </div>
-    );
-  if (error)
-    return (
-      <div className="text-center text-red-500 py-20 font-bold font-body">
-        {error}
-      </div>
-    );
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage message={error} />;
   if (!item) return null;
 
   // Find English effect entry

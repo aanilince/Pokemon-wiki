@@ -7,6 +7,8 @@ import {
   getTypeList,
 } from "../services/api";
 import PokemonCard from "../components/PokemonCard";
+import Loading from "../components/Loading";
+import ErrorMessage from "../components/ErrorMessage";
 
 const PokemonList = () => {
   const [pokemon, setPokemon] = useState([]);
@@ -25,6 +27,7 @@ const PokemonList = () => {
 
   // Fetch all types on mount
   useEffect(() => {
+    // Load types for the dropdown filter
     const fetchTypes = async () => {
       try {
         const data = await getTypeList();
@@ -36,6 +39,7 @@ const PokemonList = () => {
     fetchTypes();
   }, []);
 
+  // Direct API lookup for specific Pokemon (bypassing the list)
   const handleDbSearch = async () => {
     if (!searchTerm.trim()) return;
 
@@ -79,7 +83,7 @@ const PokemonList = () => {
           const formatted = data.pokemon.map((p) => p.pokemon);
           setPokemon(formatted);
         } else {
-          // Fetch default list
+          // Fetch default list (supports pagination)
           const data = await getPokemonList(limit, offset);
           setPokemon((prev) =>
             offset === 0 ? data.results : [...prev, ...data.results]
@@ -100,6 +104,7 @@ const PokemonList = () => {
     setOffset((prev) => prev + limit);
   };
 
+  // Client-side filtering and sorting of the loaded list
   const filteredPokemon = pokemon
     .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
@@ -234,11 +239,7 @@ const PokemonList = () => {
         </div>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-800 border-2 border-red-200 rounded-sm p-4 text-center font-body">
-          {error}
-        </div>
-      )}
+      {error && <ErrorMessage message={error} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {filteredPokemon.map((p, index) => (
@@ -252,11 +253,7 @@ const PokemonList = () => {
         </div>
       )}
 
-      {loading && (
-        <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-vintage-accent"></div>
-        </div>
-      )}
+      {loading && <Loading />}
 
       {!loading && !searchTerm && !typeFilter && !isDbSearchCallback && (
         <div className="text-center pt-8">

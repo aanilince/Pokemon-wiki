@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getItemsList, getItemDetail } from "../services/api";
+import Loading from "../components/Loading";
+import ErrorMessage from "../components/ErrorMessage";
 
 const ItemList = () => {
   const [items, setItems] = useState([]);
@@ -38,9 +40,6 @@ const ItemList = () => {
       setLoading(true);
       setError(null);
 
-      // API expects kebab-case or ID usually, but name is standard
-      // user might type "potion", API has "potion"
-      // user might type "super potion", API has "super-potion"
       const query = searchTerm.toLowerCase().trim().replace(/ /g, "-");
 
       const data = await getItemDetail(query);
@@ -110,11 +109,7 @@ const ItemList = () => {
         </div>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-800 border-2 border-red-200 rounded-sm p-4 text-center font-body">
-          {error}
-        </div>
-      )}
+      {error && <ErrorMessage message={error} />}
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {filteredItems.map((item, idx) => (
@@ -136,11 +131,7 @@ const ItemList = () => {
         </div>
       )}
 
-      {loading && (
-        <div className="text-center py-8 text-vintage-400 font-body">
-          Loading...
-        </div>
-      )}
+      {loading && <Loading />}
 
       {!loading && !searchTerm && items.length > 0 && (
         <div className="text-center pt-8">
