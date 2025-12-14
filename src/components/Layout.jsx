@@ -22,7 +22,7 @@ const Layout = ({ children }) => {
       </main>
 
       <footer className="text-center py-8 text-vintage-800 font-display text-sm border-t border-vintage-900/10 mt-auto bg-vintage-50/80 backdrop-blur-sm relative z-10">
-        © 2025 PokéWiki - Anıl Ince
+        © 2025 PokéWiki - Anıl Ince.
       </footer>
     </div>
   );
