@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import {
   getPokemonList,
   getPokemonByType,
   getPokemonDetail,
+  getTypeList,
 } from "../services/api";
 import PokemonCard from "../components/PokemonCard";
 
@@ -15,9 +16,25 @@ const PokemonList = () => {
   const limit = 20;
   const [searchTerm, setSearchTerm] = useState("");
   const [isDbSearchCallback, setIsDbSearchCallback] = useState(false);
+  const [types, setTypes] = useState([]);
+  const [sortOrder, setSortOrder] = useState("default"); // "default", "a-z", "z-a"
 
   const [searchParams] = useSearchParams();
   const typeFilter = searchParams.get("type");
+  const navigate = useNavigate();
+
+  // Fetch all types on mount
+  useEffect(() => {
+    const fetchTypes = async () => {
+      try {
+        const data = await getTypeList();
+        setTypes(data.results);
+      } catch (err) {
+        console.error("Failed to fetch types:", err);
+      }
+    };
+    fetchTypes();
+  }, []);
 
   const handleDbSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -83,9 +100,16 @@ const PokemonList = () => {
     setOffset((prev) => prev + limit);
   };
 
-  const filteredPokemon = pokemon.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPokemon = pokemon
+    .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (sortOrder === "a-z") {
+        return a.name.localeCompare(b.name);
+      } else if (sortOrder === "z-a") {
+        return b.name.localeCompare(a.name);
+      }
+      return 0; // default: keep original order
+    });
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -139,6 +163,74 @@ const PokemonList = () => {
           >
             Search in DB
           </button>
+        </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-vintage-100 p-4 rounded-sm border-2 border-vintage-200">
+        {/* Type Filter Dropdown */}
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <label className="font-bold text-vintage-700 text-sm uppercase tracking-wider whitespace-nowrap">
+            Type:
+          </label>
+          <select
+            value={typeFilter || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value) {
+                navigate(`/pokemon?type=${value}`);
+              } else {
+                navigate("/pokemon");
+              }
+            }}
+            className="flex-1 sm:flex-none bg-white border-2 border-vintage-300 text-tcg-dark rounded-sm px-4 py-2 font-mono font-bold focus:border-tcg-blue focus:ring-0 outline-none transition-all cursor-pointer"
+          >
+            <option value="">All Types</option>
+            {types.map((type) => (
+              <option key={type.name} value={type.name}>
+                {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Sort Buttons */}
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-end">
+          <label className="font-bold text-vintage-700 text-sm uppercase tracking-wider whitespace-nowrap">
+            Sort:
+          </label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSortOrder("default")}
+              className={`px-4 py-2 rounded-sm font-bold text-sm transition-all border-2 ${
+                sortOrder === "default"
+                  ? "bg-tcg-blue text-white border-tcg-blue"
+                  : "bg-white text-vintage-700 border-vintage-300 hover:border-tcg-blue"
+              }`}
+            >
+              Default
+            </button>
+            <button
+              onClick={() => setSortOrder("a-z")}
+              className={`px-4 py-2 rounded-sm font-bold text-sm transition-all border-2 ${
+                sortOrder === "a-z"
+                  ? "bg-tcg-blue text-white border-tcg-blue"
+                  : "bg-white text-vintage-700 border-vintage-300 hover:border-tcg-blue"
+              }`}
+            >
+              A-Z
+            </button>
+            <button
+              onClick={() => setSortOrder("z-a")}
+              className={`px-4 py-2 rounded-sm font-bold text-sm transition-all border-2 ${
+                sortOrder === "z-a"
+                  ? "bg-tcg-blue text-white border-tcg-blue"
+                  : "bg-white text-vintage-700 border-vintage-300 hover:border-tcg-blue"
+              }`}
+            >
+              Z-A
+            </button>
+          </div>
         </div>
       </div>
 
