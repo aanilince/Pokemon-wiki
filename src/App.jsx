@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import PokemonList from "./pages/PokemonList";
 import PokemonDetail from "./pages/PokemonDetail";
 import ItemList from "./pages/ItemList";
+import ItemDetail from "./pages/ItemDetail";
 import TypeList from "./pages/TypeList";
 import Favorites from "./pages/Favorites";
 
@@ -19,6 +20,7 @@ function App() {
             <Route path="/pokemon" element={<PokemonList />} />
             <Route path="/pokemon/:id" element={<PokemonDetail />} />
             <Route path="/items" element={<ItemList />} />
+            <Route path="/items/:name" element={<ItemDetail />} />
             <Route path="/types" element={<TypeList />} />
             <Route path="/favorites" element={<Favorites />} />
           </Routes>

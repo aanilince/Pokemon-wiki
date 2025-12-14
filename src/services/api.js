@@ -21,6 +21,11 @@ export const getItemsList = async (limit = 20, offset = 0) => {
   return response.data;
 };
 
+export const getItemDetail = async (nameOrId) => {
+  const response = await api.get(`/item/${nameOrId}`);
+  return response.data;
+};
+
 export const getTypeList = async () => {
   const response = await api.get('/type');
   return response.data;
