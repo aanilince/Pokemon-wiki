@@ -45,7 +45,7 @@ const PokemonDetail = () => {
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="font-bold text-red-700 text-xl font-mono">
               <span className="text-xs text-tcg-dark mr-1">LV</span>
-              {Math.floor(Math.random() * 50) + 20}
+              {Math.floor(pokemon.base_experience / 2.55)}
             </span>
             {pokemon.types.map((t) => (
               <span
